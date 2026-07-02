@@ -80,12 +80,13 @@ private final JsonUtility jsonUtility;
 	}
 
 	public List<Hierarchical> getHierarchical() {
-	    final String sql = "select shierarchicalname, sdescription from hierarchical";
+	    final String sql = "select nhierarchicalid, shierarchicalname, sdescription from hierarchical";
 
 	    return jdbcTemplate.query(sql, (rs, rowNum) -> {
 	        final Hierarchical h = new Hierarchical();
 	        h.setHierarchicalName(rs.getString("shierarchicalname"));
 	        h.setDescription(rs.getString("sdescription"));
+	        h.setId(rs.getInt("nhierarchicalid"));
 	        System.out.println(h);
 	        return h;
 	    });
@@ -122,5 +123,38 @@ private final JsonUtility jsonUtility;
 
 	
 	}
+
+	public int mapStructure(final StructureMapping map) {
+		
 	
+		
+		final String insert = "Insert into structuremapping(scontainername,sdescription,nhierarchicalid,nodedata)values(?,?,?, ?::jsonb)";
+		
+		return jdbcTemplate.update(insert,map.getScontainername(),map.getSdescription(),map.getNhierarchicalid(),jsonUtility.toJsonString(map.getNodedata()));
+		
+	}
+
+	public List<StructureMapping> getMapStructures() {
+
+	    final String query =
+	        "SELECT sm.scontainername, " +
+	        "sm.sdescription, " +
+	        "h.shierarchicalname " +
+	        "FROM structuremapping sm " +
+	        "INNER JOIN hierarchical h " +
+	        "ON sm.nhierarchicalid = h.nhierarchicalid " +
+	        "WHERE sm.nstatus = 1";
+
+	    return jdbcTemplate.query(query, (rs, rowNum) -> {
+
+	        final StructureMapping map = new StructureMapping();
+
+	        map.setScontainername(rs.getString("scontainername"));
+	        map.setSdescription(rs.getString("sdescription"));
+	        map.setShierarchicalname(rs.getString("shierarchicalname"));
+
+	        return map;
+	    });
+	}
+
 }

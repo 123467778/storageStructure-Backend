@@ -2,6 +2,7 @@ package com.example.demo;
 
 import java.util.List;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -59,4 +60,28 @@ public class StorageStructureController {
 	
 	
 
+	@PostMapping("/createMap")
+	public ResponseEntity<?>  mapStructure(@RequestBody final StructureMapping map){
+		final int row =structureService.mapStructure(map);
+		if(row >0) {
+			return ResponseEntity.ok("Structured got mapped");
+			
+		}
+		
+		System.out.println(map.getNhierarchicalid());
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body("failed attempt to map structure ");	}
+
+	
+
+    
+	@GetMapping("/getMap")
+	public ResponseEntity<?> getMapStructures(){
+		final List<StructureMapping> structures = structureService.getMapStructures();
+		return ResponseEntity.ok(structures);
+	}
+	
+	
+	
+	
 }

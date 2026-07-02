@@ -40,6 +40,19 @@ public class StructureService {
 		
 	}
 
+	public int  mapStructure(final StructureMapping map) {
+		
+		return structRepo.mapStructure(map);
+		
+	}
+
+	public List<StructureMapping> getMapStructures() {
+		
+		return structRepo.getMapStructures();
+	}
+
+
+
 	
 	
 	
