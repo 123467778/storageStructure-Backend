@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -82,6 +83,31 @@ public class StorageStructureController {
 	}
 	
 	
+	@PutMapping("/editNode/{containerName}")
+	public ResponseEntity<?> editNode(@RequestBody final StructureMapping struct ,@PathVariable final String containerName){
+		
+	final int row = structureService.editNode(struct, containerName);
+	 
 	
+
+	if(row >0) {
+	
+		return ResponseEntity.ok("Node edited ...");
+		
+	}
+	
+	
+	return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Node failed to edit");
+		
+	}
+	
+	
+	@GetMapping("/getEditNode/{scontainerName}/{shierarchicalName}")
+	public ResponseEntity<?> getEditNode(
+	        @PathVariable final String scontainerName,
+	        @PathVariable final String shierarchicalName) {
+
+	    return structureService.getEditNode(scontainerName, shierarchicalName);
+	}
 	
 }

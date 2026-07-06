@@ -1,6 +1,7 @@
 package com.example.demo;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -157,4 +158,35 @@ private final JsonUtility jsonUtility;
 	    });
 	}
 
+	public int editNode( final StructureMapping struct,final String containerName ) {
+		
+		System.out.println(jsonUtility.toJsonString(struct.getNodedata()));
+		
+		final String select ="select nmapid from structuremapping where scontainername=?";
+		final int containerId = jdbcTemplate.queryForObject(select,Integer.class,containerName);
+		
+		
+		System.out.println("Id" +containerId);
+		
+		
+		
+		final String sql = "update structuremapping set nodedata=?::jsonb where nmapid = ? ";
+		
+		return jdbcTemplate.update(sql,jsonUtility.toJsonString(struct.getNodedata()),containerId);
+		
+		
+	}
+
+	public Map<String, Object> getEditNode(final String containerName) {
+
+	    final String sql = "SELECT nodedata FROM structuremapping WHERE scontainername = ?";
+
+	    final List<Map<String, Object>> list = jdbcTemplate.query(
+	        sql,
+	        (rs, rowNum) -> jsonUtility.fromJson(rs.getString("nodedata")),
+	        containerName
+	    );
+
+	    return list.isEmpty() ? null : list.get(0);
+	}
 }
