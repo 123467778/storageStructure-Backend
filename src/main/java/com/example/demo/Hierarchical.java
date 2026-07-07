@@ -8,7 +8,7 @@ public class Hierarchical {
 	private int id;
     private String HierarchicalName;
    
-    private StructureData data;
+    private Level data;
     
     
     private String description;
