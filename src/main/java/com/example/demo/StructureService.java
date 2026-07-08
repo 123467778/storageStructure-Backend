@@ -3,7 +3,6 @@ package com.example.demo;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -57,28 +56,41 @@ public class StructureService {
 		return structRepo.getMapStructures();
 	}
 
-	public int editNode( final StructureMapping struct,final String containerName) {
-		return structRepo.editNode(struct,containerName);
+//	public int editNode( final StructureMapping struct,final String containerName) {
+//		return structRepo.editNode(struct,containerName);
+//		
+//	}
+
+	
+//	public ResponseEntity<?> getEditNode(final String scontainerName, final String shierarchicalName) {
+//
+//	    final Map<String, Object> edited =
+//	            structRepo.getEditNode(scontainerName);
+//
+//	    if (edited != null) {
+//	        return ResponseEntity.ok(edited);
+//	    }
+//
+//	    final List<Level> originalTree =
+//	            structRepo.getHierarchicalByName(shierarchicalName);
+//
+//	    return ResponseEntity.ok(originalTree);
+//	}
+	
+//	public StructureMapping getEditNode(final String scontainerName){
+//		return structRepo.getEditNode(scontainerName);
+//	}
+
+	public Map<String,Object> getNodeData(final String scontainername) {
+		return structRepo.getNodeData(scontainername);
+	}
+
+	public int editNode(final String scontainername,final StructureMapping struct) {
 		
+		
+		
+		return structRepo.editNode(scontainername,struct);
 	}
-
-	
-	public ResponseEntity<?> getEditNode(final String scontainerName, final String shierarchicalName) {
-
-	    final Map<String, Object> edited =
-	            structRepo.getEditNode(scontainerName);
-
-	    if (edited != null) {
-	        return ResponseEntity.ok(edited);
-	    }
-
-	    final List<Level> originalTree =
-	            structRepo.getHierarchicalByName(shierarchicalName);
-
-	    return ResponseEntity.ok(originalTree);
-	}
-	
-	
 	
 
 }

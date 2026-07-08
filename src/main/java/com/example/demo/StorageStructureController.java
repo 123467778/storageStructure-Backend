@@ -1,6 +1,7 @@
 package com.example.demo;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -69,7 +70,7 @@ public class StorageStructureController {
 			
 		}
 		
-		System.out.println(map.getNhierarchicalid());
+		System.out.println(map.getNodedata());
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body("failed attempt to map structure ");	}
 
@@ -82,32 +83,67 @@ public class StorageStructureController {
 		return ResponseEntity.ok(structures);
 	}
 	
+//	
+//	@PutMapping("/editNode/{containerName}")
+//	public ResponseEntity<?> editNode(@RequestBody final StructureMapping struct ,@PathVariable final String containerName){
+//		
+//	final int row = structureService.editNode(struct, containerName);
+//	 
+//	
+//
+//	if(row >0) {
+//	
+//		return ResponseEntity.ok("Node edited ...");
+//		
+//	}
+//	
+//	
+//	return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Node failed to edit");
+//		
+//	}
 	
-	@PutMapping("/editNode/{containerName}")
-	public ResponseEntity<?> editNode(@RequestBody final StructureMapping struct ,@PathVariable final String containerName){
-		
-	final int row = structureService.editNode(struct, containerName);
-	 
 	
-
-	if(row >0) {
+//	@GetMapping("/getEditNode/{scontainerName}/{shierarchicalName}")
+//	public ResponseEntity<?> getEditNode(
+//	        @PathVariable final String scontainerName,
+//	        @PathVariable final String shierarchicalName) {
+//
+//	    return structureService.getEditNode(scontainerName, shierarchicalName);
+//	    
+//	  
+//	}
+//	
 	
-		return ResponseEntity.ok("Node edited ...");
-		
+//	@GetMapping("/getEditNode/{scontainerName}")
+//	public ResponseEntity<StructureMapping> getEditNode(
+//            @PathVariable final String scontainerName) {
+//
+//        final StructureMapping structureMapping = 
+//                structureService.getEditNode(scontainerName);
+//
+//        if (structureMapping == null) {
+//            return ResponseEntity.notFound().build();
+//        }
+//
+//        return ResponseEntity.ok(structureMapping);
+//    }
+//	
+	
+	@GetMapping("/getTree/{scontainername}")
+	public Map<String,Object> getNodeData(final @PathVariable String scontainername){
+		return structureService.getNodeData(scontainername);
+	}
+	
+	@PutMapping("/editNode/{scontainername}")
+	public ResponseEntity<?> editNode(final @PathVariable String scontainername,  final @RequestBody StructureMapping struct ){
+		final int row  = structureService.editNode(scontainername,struct);
+		if(row>0) {
+			return ResponseEntity.ok("Node edited ...");
+		}
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Node not edited ...") ;
 	}
 	
 	
-	return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Node failed to edit");
-		
-	}
 	
-	
-	@GetMapping("/getEditNode/{scontainerName}/{shierarchicalName}")
-	public ResponseEntity<?> getEditNode(
-	        @PathVariable final String scontainerName,
-	        @PathVariable final String shierarchicalName) {
-
-	    return structureService.getEditNode(scontainerName, shierarchicalName);
-	}
 	
 }
