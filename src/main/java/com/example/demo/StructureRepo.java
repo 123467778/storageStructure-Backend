@@ -50,7 +50,7 @@ private final JsonUtility jsonUtility;
 			        struct.getHierarchicalName()
 			      
 			);
-		 final String structure = "Insert into structure (snodename,nlevel,ncount,nrows,ncolumns,isleaf,nhierarchicalid) values(?,?,?,?,?,?,?)";
+		 final String structure = "Insert into structure (snodename,nlevel,ncount,nrows,ncolumns,isleaf,icon,nhierarchicalid) values(?,?,?,?,?,?,?,?)";
 		 
 		 for (final Level level : struct.getData().getLevels()) {
 
@@ -65,6 +65,7 @@ private final JsonUtility jsonUtility;
 			            level.getRows(),
 			            level.getColumns(),
 			            level.getIsLeaf(),
+			            level.getIcon(),
 			            hierarchicalId
 			            
 			           
@@ -117,6 +118,7 @@ private final JsonUtility jsonUtility;
 			        l.setRows(rs.getInt("nrows"));
 			        l.setColumns(rs.getInt("ncolumns"));
 			        l.setIsLeaf(rs.getBoolean("isleaf"));
+			        l.setIcon(rs.getString("icon"));
 			        return l;
 			    },
 			    hierarchicalId

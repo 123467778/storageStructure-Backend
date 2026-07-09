@@ -15,6 +15,8 @@ public class Level {
 	    private Integer columns;
 	    private Integer root_structure_id;
 	    
+	    private String icon;
+	    
 	    private List<Level> levels;
 
 }
