@@ -50,7 +50,7 @@ private final JsonUtility jsonUtility;
 			        struct.getHierarchicalName()
 			      
 			);
-		 final String structure = "Insert into structure (snodename,nlevel,ncount,nrows,ncolumns,isleaf,icon,nhierarchicalid) values(?,?,?,?,?,?,?,?)";
+		 final String structure = "Insert into structure (snodename,displayName,nlevel,ncount,nrows,ncolumns,isleaf,icon,nhierarchicalid) values(?,?,?,?,?,?,?,?,?)";
 		 
 		 for (final Level level : struct.getData().getLevels()) {
 
@@ -60,6 +60,7 @@ private final JsonUtility jsonUtility;
 			    count += jdbcTemplate.update(
 			            structure,
 			            level.getNodeName(),
+			            level.getDisplayName(),
 			            level.getLevel(),
 			            level.getQuantity(),
 			            level.getRows(),
@@ -113,6 +114,7 @@ private final JsonUtility jsonUtility;
 			    (rs, rowNum) -> {
 			        final Level l = new Level();
 			        l.setNodeName(rs.getString("snodename"));
+			        l.setDisplayName(rs.getString("displayName"));
 			        l.setQuantity(rs.getInt("ncount"));
 			        l.setLevel(rs.getInt("nlevel"));
 			        l.setRows(rs.getInt("nrows"));

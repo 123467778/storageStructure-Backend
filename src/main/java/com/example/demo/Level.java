@@ -17,6 +17,8 @@ public class Level {
 	    
 	    private String icon;
 	    
+	    private String displayName;
+	    
 	    private List<Level> levels;
 
 }
