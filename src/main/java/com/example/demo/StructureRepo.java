@@ -190,74 +190,8 @@ private final JsonUtility jsonUtility;
 		return jdbcTemplate.update(sql,jsonUtility.toJsonString(struct.getNodedata()),scontainername);
 	}
 
-//	public int editNode( final StructureMapping struct,final String containerName ) {
-//		
-//		System.out.println(jsonUtility.toJsonString(struct.getNodedata()));
-//		
-//		final String select ="select nmapid from structuremapping where scontainername=?";
-//		final int containerId = jdbcTemplate.queryForObject(select,Integer.class,containerName);
-//		
-//		
-//		System.out.println("Id" +containerId);
-//		
-//		
-//		
-//		final String sql = "update structuremapping set nodedata=?::jsonb where nmapid = ? ";
-//		
-//		return jdbcTemplate.update(sql,jsonUtility.toJsonString(struct.getNodedata()),containerId);
-//		
-//		
-//	}
 
-//	public Map<String, Object> getEditNode(final String containerName) {
-//
-//	    final String sql = "SELECT nodedata FROM structuremapping WHERE scontainername = ? order by  1 desc";
-//
-//	    final List<Map<String, Object>> list = jdbcTemplate.query(
-//	        sql,
-//	        (rs, rowNum) -> jsonUtility.fromJson(rs.getString("nodedata")),
-//	        containerName
-//	    );
-//
-//	    System.out.println(list.get(0));
-//	    
-//	    
-//	    return list.isEmpty() ? null : list.get(0);
-//	}
-//	
-//	public StructureMapping getEditNode(final String scontainerName) {
-//	    final String sql = "select nodedata from structuremapping where scontainername = ?";
-//
-//	    return jdbcTemplate.queryForObject(sql, (rs, rowNum) -> {
-//	        final StructureMapping s = new StructureMapping();
-//
-//	        final String nodeDataJson = rs.getString("nodedata");
-//
-//	        final Map<String, Object> nodeData = jsonUtility.fromJson(nodeDataJson);
-//
-//	        s.setNodedata(nodeData);
-//	        System.out.println(nodeData);
-//
-//	        return s;
-//	    }, scontainerName);
-//	}
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+
 	
 }
