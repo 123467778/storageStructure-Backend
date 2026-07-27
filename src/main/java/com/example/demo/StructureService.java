@@ -91,6 +91,10 @@ public class StructureService {
 		
 		return structRepo.editNode(scontainername,struct);
 	}
+
+	public List<Map<String, Object>> getAllTreeStructure() {
+		return structRepo.getAllTreeStructure();
+	}
 	
 
 }

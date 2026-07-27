@@ -42,7 +42,7 @@ private final JsonUtility jsonUtility;
 		
 		 count+= jdbcTemplate.update(sql,struct.getHierarchicalName(),struct.getDescription());
 		 final String selectSql =
-				    "SELECT nhierarchicalid FROM hierarchical WHERE shierarchicalname = ?";
+				    "SELECT nhierarchicalid FROM hierarchical WHERE shierarchicalname = ? order by  1 desc";
 		 
 		 final Integer hierarchicalId = jdbcTemplate.queryForObject(
 			        selectSql,
@@ -83,7 +83,7 @@ private final JsonUtility jsonUtility;
 	}
 
 	public List<Hierarchical> getHierarchical() {
-	    final String sql = "select nhierarchicalid, shierarchicalname, sdescription from hierarchical";
+	    final String sql = "select nhierarchicalid, shierarchicalname, sdescription from hierarchical ";
 
 	    return jdbcTemplate.query(sql, (rs, rowNum) -> {
 	        final Hierarchical h = new Hierarchical();
@@ -97,7 +97,7 @@ private final JsonUtility jsonUtility;
 
 	public List<Level> getHierarchicalByName(final String hierarchicalName) {
 		final String selectSql =
-			    "SELECT nhierarchicalid FROM hierarchical WHERE shierarchicalname = ?";
+			    "SELECT nhierarchicalid FROM hierarchical WHERE shierarchicalname = ? ";
 	 
 	 final Integer hierarchicalId = jdbcTemplate.queryForObject(
 		        selectSql,
@@ -106,7 +106,7 @@ private final JsonUtility jsonUtility;
 		     
 		);
 	 
-	 final String getStruct = "select * from structure where nhierarchicalid=?";
+	 final String getStruct = "select * from structure where nhierarchicalid=? ";
 	 
 	 
 	 return jdbcTemplate.query(
@@ -189,9 +189,14 @@ private final JsonUtility jsonUtility;
 		);
 		return jdbcTemplate.update(sql,jsonUtility.toJsonString(struct.getNodedata()),scontainername);
 	}
-
-
 	
+	public List<Map<String, Object>> getAllTreeStructure() {
 
-	
+	    final String sql = "SELECT nodedata FROM structuremapping";
+
+	    return jdbcTemplate.query(sql, (rs, rowNum) ->
+	        jsonUtility.fromJson(rs.getString("nodedata"))
+	    );
+	}
+
 }

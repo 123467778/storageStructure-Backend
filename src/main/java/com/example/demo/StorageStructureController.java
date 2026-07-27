@@ -144,6 +144,22 @@ public class StorageStructureController {
 	}
 	
 	
+	@GetMapping("/getNodeData")
+	public ResponseEntity<?> getAllTreeStructure (){
+		
+		final List<Map<String , Object>> nodes =  structureService.getAllTreeStructure();
+		
+		if(nodes.size() >0 ) {
+			return ResponseEntity.ok(nodes) ;
+		}
+		
+		
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Data failed to fetch ....") ;
+
+		
+	}
+	
+	
 	
 	
 }
