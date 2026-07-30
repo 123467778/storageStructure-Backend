@@ -17,5 +17,7 @@ public class StructureMapping {
 	@Transient
     private String shierarchicalname;
     private Integer nstatus;
+    
+    private String status;
 
 }

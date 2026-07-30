@@ -95,6 +95,10 @@ public class StructureService {
 	public List<Map<String, Object>> getAllTreeStructure() {
 		return structRepo.getAllTreeStructure();
 	}
+
+	public int approveStructure(final String scontainername) {
+		return structRepo.approveStructure(scontainername);
+	}
 	
 
 }

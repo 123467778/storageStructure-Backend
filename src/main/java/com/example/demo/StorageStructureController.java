@@ -159,6 +159,17 @@ public class StorageStructureController {
 		
 	}
 	
+	@PutMapping("/getApprove/{scontainername}")
+	public ResponseEntity<?> approveStructure (final @PathVariable String scontainername){
+		final int row =structureService.approveStructure(scontainername);
+		
+		if(row>0) {
+			return ResponseEntity.ok("Node approved ...");
+		}
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Node not approved ...") ;
+
+	}
+	
 	
 	
 	

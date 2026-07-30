@@ -139,16 +139,43 @@ private final JsonUtility jsonUtility;
 		
 	}
 
+//	public List<StructureMapping> getMapStructures() {
+//
+//	    final String query =
+//	        "SELECT sm.scontainername, " +
+//	        "sm.sdescription, " +
+//	        "h.shierarchicalname " +
+//	        "sm.status"+
+//	        "FROM structuremapping sm " +
+//	        "INNER JOIN hierarchical h " +
+//	        "ON sm.nhierarchicalid = h.nhierarchicalid " +
+//	        "WHERE sm.nstatus = 1 order by  1 desc";
+//
+//	    return jdbcTemplate.query(query, (rs, rowNum) -> {
+//
+//	        final StructureMapping map = new StructureMapping();
+//
+//	        map.setScontainername(rs.getString("scontainername"));
+//	        map.setSdescription(rs.getString("sdescription"));
+//	        map.setShierarchicalname(rs.getString("shierarchicalname"));
+//	        map.setStatus(rs.getString("status"));
+//
+//	        return map;
+//	    });
+//	}
+	
 	public List<StructureMapping> getMapStructures() {
 
 	    final String query =
 	        "SELECT sm.scontainername, " +
 	        "sm.sdescription, " +
-	        "h.shierarchicalname " +
+	        "h.shierarchicalname, " +
+	        "sm.status " +
 	        "FROM structuremapping sm " +
 	        "INNER JOIN hierarchical h " +
 	        "ON sm.nhierarchicalid = h.nhierarchicalid " +
-	        "WHERE sm.nstatus = 1 order by  1 desc";
+	        "WHERE sm.nstatus = 1 " +
+	        "ORDER BY sm.scontainername DESC";
 
 	    return jdbcTemplate.query(query, (rs, rowNum) -> {
 
@@ -157,6 +184,7 @@ private final JsonUtility jsonUtility;
 	        map.setScontainername(rs.getString("scontainername"));
 	        map.setSdescription(rs.getString("sdescription"));
 	        map.setShierarchicalname(rs.getString("shierarchicalname"));
+	        map.setStatus(rs.getString("status"));
 
 	        return map;
 	    });
@@ -197,6 +225,15 @@ private final JsonUtility jsonUtility;
 	    return jdbcTemplate.query(sql, (rs, rowNum) ->
 	        jsonUtility.fromJson(rs.getString("nodedata"))
 	    );
+	}
+
+	public int approveStructure(final String scontainername) {
+		
+		final String sql =
+			    "UPDATE structuremapping " +
+			    "SET status = 'approved' " +
+			    "WHERE scontainername = ?";
+		return jdbcTemplate.update(sql,scontainername);
 	}
 
 }
