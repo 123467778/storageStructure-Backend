@@ -50,6 +50,8 @@ private final JsonUtility jsonUtility;
 			        struct.getHierarchicalName()
 			      
 			);
+		 
+		 
 		 final String structure = "Insert into structure (snodename,displayName,nlevel,ncount,nrows,ncolumns,isleaf,icon,nhierarchicalid) values(?,?,?,?,?,?,?,?,?)";
 		 
 		 for (final Level level : struct.getData().getLevels()) {
@@ -128,16 +130,64 @@ private final JsonUtility jsonUtility;
 
 	
 	}
-
-	public int mapStructure(final StructureMapping map) {
-		
 	
-		
-		final String insert = "Insert into structuremapping(scontainername,sdescription,nhierarchicalid,nodedata)values(?,?,?, ?::jsonb)";
-		
-		return jdbcTemplate.update(insert,map.getScontainername(),map.getSdescription(),map.getNhierarchicalid(),jsonUtility.toJsonString(map.getNodedata()));
-		
+	
+	
+	public int mapStructure(final StructureMapping map) {
+
+	    final String checkQuery = "SELECT COUNT(*) FROM structuremapping WHERE LOWER(scontainername) = LOWER(?)";
+
+	    final Integer count = jdbcTemplate.queryForObject(
+	            checkQuery,
+	            Integer.class,
+	            map.getScontainername()
+	    );
+
+	    if (count != null && count > 0) {
+	        throw new RuntimeException("Container name already exists.");
+	    }
+
+	    final String insert = "INSERT INTO structuremapping " +
+	            "(scontainername, sdescription, nhierarchicalid, nodedata) " +
+	            "VALUES (?, ?, ?, ?::jsonb)";
+
+	    return jdbcTemplate.update(
+	            insert,
+	            map.getScontainername(),
+	            map.getSdescription(),
+	            map.getNhierarchicalid(),
+	            jsonUtility.toJsonString(map.getNodedata())
+	    );
 	}
+	
+	
+	
+	
+	
+	
+	
+	
+
+//	public int mapStructure(final StructureMapping map) {
+//		
+//	
+//		String checkQuery = "SELECT COUNT(*) FROM structuremapping WHERE LOWER(scontainername) = LOWER(?)";
+//
+//		PreparedStatement ps = conn.prepareStatement(checkQuery);
+//		ps.setString(1, map.getScontainername());
+//
+//		ResultSet rs = ps.executeQuery();
+//		if (rs.next() && rs.getInt(1) > 0) {
+//		    throw new Exception("Container name already exists.");
+//		}
+//		
+//		
+//		
+//		final String insert = "Insert into structuremapping(scontainername,sdescription,nhierarchicalid,nodedata)values(?,?,?, ?::jsonb)";
+//		
+//		return jdbcTemplate.update(insert,map.getScontainername(),map.getSdescription(),map.getNhierarchicalid(),jsonUtility.toJsonString(map.getNodedata()));
+//		
+//	}
 
 //	public List<StructureMapping> getMapStructures() {
 //

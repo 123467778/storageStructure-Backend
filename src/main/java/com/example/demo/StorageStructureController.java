@@ -64,15 +64,22 @@ public class StorageStructureController {
 
 	@PostMapping("/createMap")
 	public ResponseEntity<?>  mapStructure(@RequestBody final StructureMapping map){
-		final int row =structureService.mapStructure(map);
-		if(row >0) {
-			return ResponseEntity.ok("Structured got mapped");
+		try {
+			final int row =structureService.mapStructure(map);
+			if(row >0) {
+				return ResponseEntity.ok("Structured got mapped");
+				
+			}
 			
+			return ResponseEntity.status(HttpStatus.CONFLICT)
+	                .body("failed attempt to map structure");	
+		}
+		catch(final RuntimeException ex) {
+			
+			return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
 		}
 		
-		System.out.println(map.getNodedata());
-		return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                .body("failed attempt to map structure ");	}
+	}
 
 	
 
