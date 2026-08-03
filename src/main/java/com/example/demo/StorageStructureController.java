@@ -26,21 +26,28 @@ public class StorageStructureController {
 		this.structureService =structureService;
 	}
 	
-//	@PostMapping("/create")
-//    public ResponseEntity<String> addStructure(@RequestBody Structure struct){
-//        structureService.addStructure(struct);
-//        return ResponseEntity.ok("Structure created successfully...");
-//    }
+
 	
 	
 	@PostMapping("/getNode")
 	public ResponseEntity<?> createStructure(@RequestBody final Hierarchical struct) {
-//	  List<Level> levels = struct.getData().getLevels();
-//
-//	    levels.forEach(System.out::println);
-	    structureService.createStructure(struct);
 
-	    return ResponseEntity.ok("Structure Created ...");
+		
+	 try {
+		 
+		  final int row=  structureService.createStructure(struct);
+
+		 if(row>0) {
+			  return ResponseEntity.ok("Structure Created ..."); 
+		  }
+		 return ResponseEntity.status(HttpStatus.CONFLICT)
+	                .body("failed attempt to map structure");	
+	 }
+	 catch(final RuntimeException e) {
+			return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
+
+	 }
+	
 	}
 	
 	
@@ -90,51 +97,7 @@ public class StorageStructureController {
 		return ResponseEntity.ok(structures);
 	}
 	
-//	
-//	@PutMapping("/editNode/{containerName}")
-//	public ResponseEntity<?> editNode(@RequestBody final StructureMapping struct ,@PathVariable final String containerName){
-//		
-//	final int row = structureService.editNode(struct, containerName);
-//	 
-//	
-//
-//	if(row >0) {
-//	
-//		return ResponseEntity.ok("Node edited ...");
-//		
-//	}
-//	
-//	
-//	return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Node failed to edit");
-//		
-//	}
-	
-	
-//	@GetMapping("/getEditNode/{scontainerName}/{shierarchicalName}")
-//	public ResponseEntity<?> getEditNode(
-//	        @PathVariable final String scontainerName,
-//	        @PathVariable final String shierarchicalName) {
-//
-//	    return structureService.getEditNode(scontainerName, shierarchicalName);
-//	    
-//	  
-//	}
-//	
-	
-//	@GetMapping("/getEditNode/{scontainerName}")
-//	public ResponseEntity<StructureMapping> getEditNode(
-//            @PathVariable final String scontainerName) {
-//
-//        final StructureMapping structureMapping = 
-//                structureService.getEditNode(scontainerName);
-//
-//        if (structureMapping == null) {
-//            return ResponseEntity.notFound().build();
-//        }
-//
-//        return ResponseEntity.ok(structureMapping);
-//    }
-//	
+
 	
 	@GetMapping("/getTree/{scontainername}")
 	public Map<String,Object> getNodeData(final @PathVariable String scontainername){
@@ -143,6 +106,7 @@ public class StorageStructureController {
 	
 	@PutMapping("/editNode/{scontainername}")
 	public ResponseEntity<?> editNode(final @PathVariable String scontainername,  final @RequestBody StructureMapping struct ){
+		
 		final int row  = structureService.editNode(scontainername,struct);
 		if(row>0) {
 			return ResponseEntity.ok("Node edited ...");
@@ -166,18 +130,66 @@ public class StorageStructureController {
 		
 	}
 	
+//	@PostMapping("/getApprove/{scontainername}")
+//	public ResponseEntity<?> approveStructure (final @PathVariable String scontainername){
+//		final int row =structureService.approveStructure(scontainername);
+//		
+//		if(row>0) {
+//			return ResponseEntity.ok("Node approved ...");
+//		}
+//		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Node not approved ...") ;
+//
+//	}
+	
+//	@PostMapping("/getApprove/{scontainername}")
+//	public ResponseEntity<?> approveStructure (final @PathVariable String scontainername, final @RequestBody StructureMapping struct ){
+//		
+//		 final List<String> duplicateName =
+//	NodeValidator.findDuplicateName(struct.getNodedata());
+//		
+//		if(!duplicateName.isEmpty()) {
+//			return ResponseEntity.badRequest().body(Map.of("message","Duplicate node name found","duplicates",duplicateName));
+//		}
+//		
+//		final int row =structureService.approveStructure(scontainername,struct);
+//		
+//		if(row>0) {
+//			return ResponseEntity.ok("Node approved ...");
+//		}
+//		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Node not approved ...") ;
+//
+//	}
+	
+	
 	@PutMapping("/getApprove/{scontainername}")
-	public ResponseEntity<?> approveStructure (final @PathVariable String scontainername){
-		final int row =structureService.approveStructure(scontainername);
-		
-		if(row>0) {
-			return ResponseEntity.ok("Node approved ...");
-		}
-		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Node not approved ...") ;
+	public ResponseEntity<?> approveStructure(
+	        @PathVariable final String scontainername) {
 
+	    try {
+
+	        final int row = structureService.approveStructure(scontainername);
+
+	        if (row > 0) {
+	            return ResponseEntity.ok("Node approved...");
+	        }
+
+	        return ResponseEntity
+	                .status(HttpStatus.BAD_REQUEST)
+	                .body("Node not approved...");
+
+	    } catch (final IllegalArgumentException e) {
+
+	        return ResponseEntity
+	                .status(HttpStatus.BAD_REQUEST)
+	                .body(e.getMessage());
+
+	    } catch (final Exception e) {
+
+	        return ResponseEntity
+	                .status(HttpStatus.INTERNAL_SERVER_ERROR)
+	                .body("Error while approving node");
+	    }
 	}
-	
-	
 	
 	
 }

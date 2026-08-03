@@ -32,15 +32,24 @@ private final JsonUtility jsonUtility;
 
 	public int createStructure(final Hierarchical struct) {
 		
-		
+		  final String checkQuery = "SELECT COUNT(*) FROM hierarchical WHERE LOWER(shierarchicalname) = LOWER(?)";
+
+		    final Integer count = jdbcTemplate.queryForObject(
+		            checkQuery,
+		            Integer.class,
+		          struct.getHierarchicalName()
+		    );
+
+		    if (count != null && count > 0) {
+		        throw new RuntimeException("hierarachical name already exists.");
+		    }
 
 		
 		final String sql = "INSERT INTO hierarchical ( shierarchicalname , sdescription) VALUES (?,?)";
-//		String structure = "Insert into structure (snodename,nlevel,ncount,nrows,ncolumns,isleaf,nhierarchicalid) values(?,?,?,?,?,?,?)";
   
-		int count=0;
+		int row=0;
 		
-		 count+= jdbcTemplate.update(sql,struct.getHierarchicalName(),struct.getDescription());
+		 row+= jdbcTemplate.update(sql,struct.getHierarchicalName(),struct.getDescription());
 		 final String selectSql =
 				    "SELECT nhierarchicalid FROM hierarchical WHERE shierarchicalname = ? order by  1 desc";
 		 
@@ -59,7 +68,7 @@ private final JsonUtility jsonUtility;
 			  
 
 
-			    count += jdbcTemplate.update(
+			    row += jdbcTemplate.update(
 			            structure,
 			            level.getNodeName(),
 			            level.getDisplayName(),
@@ -80,7 +89,7 @@ private final JsonUtility jsonUtility;
 
 		
 		   
-		    return count;
+		    return row;
 		   
 	}
 
@@ -161,58 +170,7 @@ private final JsonUtility jsonUtility;
 	}
 	
 	
-	
-	
-	
-	
-	
-	
 
-//	public int mapStructure(final StructureMapping map) {
-//		
-//	
-//		String checkQuery = "SELECT COUNT(*) FROM structuremapping WHERE LOWER(scontainername) = LOWER(?)";
-//
-//		PreparedStatement ps = conn.prepareStatement(checkQuery);
-//		ps.setString(1, map.getScontainername());
-//
-//		ResultSet rs = ps.executeQuery();
-//		if (rs.next() && rs.getInt(1) > 0) {
-//		    throw new Exception("Container name already exists.");
-//		}
-//		
-//		
-//		
-//		final String insert = "Insert into structuremapping(scontainername,sdescription,nhierarchicalid,nodedata)values(?,?,?, ?::jsonb)";
-//		
-//		return jdbcTemplate.update(insert,map.getScontainername(),map.getSdescription(),map.getNhierarchicalid(),jsonUtility.toJsonString(map.getNodedata()));
-//		
-//	}
-
-//	public List<StructureMapping> getMapStructures() {
-//
-//	    final String query =
-//	        "SELECT sm.scontainername, " +
-//	        "sm.sdescription, " +
-//	        "h.shierarchicalname " +
-//	        "sm.status"+
-//	        "FROM structuremapping sm " +
-//	        "INNER JOIN hierarchical h " +
-//	        "ON sm.nhierarchicalid = h.nhierarchicalid " +
-//	        "WHERE sm.nstatus = 1 order by  1 desc";
-//
-//	    return jdbcTemplate.query(query, (rs, rowNum) -> {
-//
-//	        final StructureMapping map = new StructureMapping();
-//
-//	        map.setScontainername(rs.getString("scontainername"));
-//	        map.setSdescription(rs.getString("sdescription"));
-//	        map.setShierarchicalname(rs.getString("shierarchicalname"));
-//	        map.setStatus(rs.getString("status"));
-//
-//	        return map;
-//	    });
-//	}
 	
 	public List<StructureMapping> getMapStructures() {
 
@@ -276,6 +234,12 @@ private final JsonUtility jsonUtility;
 	        jsonUtility.fromJson(rs.getString("nodedata"))
 	    );
 	}
+	
+	
+	
+	
+	
+	
 
 	public int approveStructure(final String scontainername) {
 		
@@ -285,5 +249,11 @@ private final JsonUtility jsonUtility;
 			    "WHERE scontainername = ?";
 		return jdbcTemplate.update(sql,scontainername);
 	}
+
+	
+	
+	
+
+	
 
 }
